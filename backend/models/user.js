@@ -13,7 +13,11 @@ const userSchema = new mongoose.Schema(
 		posts: {
 			type: Array,
 			required: true,
-		}
+		},
+		socialPosts: {
+			type: Array,
+			required: true,
+		},
 	},
 	{
 		timestamps: true,

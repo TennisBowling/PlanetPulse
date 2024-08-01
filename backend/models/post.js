@@ -59,7 +59,7 @@ const commentSchema = new mongoose.Schema(
 			required: true,
 		},
 		likes: {
-			type: Number,
+			type: [String],
 			required: true,
 			default: 0
 		}
@@ -84,7 +84,7 @@ const socialPostSchema = new mongoose.Schema(
 			required: true,
 		},
 		likes: {
-			type: Number,
+			type: [String],
 			required: true,
 		},
 		comments: [commentSchema],

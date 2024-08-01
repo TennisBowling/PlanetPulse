@@ -80,6 +80,7 @@ app.post("/register", async (req, res) => { // register route to create an accou
 			username: req.body.username.toLowerCase(),
 			password: hashedPassword,
 			posts: [],
+			socialPosts: [],
 		};
 		// Create a new user record in the database
 		const user = await User.create(newUser);
