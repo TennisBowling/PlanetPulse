@@ -48,13 +48,51 @@ const postSchema = new mongoose.Schema(
 	}
 );
 
+const commentSchema = new mongoose.Schema(
+	{
+		username: {
+			type: String,
+			required: true,
+		},
+		text: {
+			type: String,
+			required: true,
+		},
+		likes: {
+			type: Number,
+			required: true,
+			default: 0
+		}
+	},
+	{
+		timestamps: true,
+	}
+);
+
 const socialPostSchema = new mongoose.Schema(
 	{
 		title: {
 			type: String,
-			
-		}
+			required: true,
+		},
+		text: {
+			type: String,
+			required: true,
+		},
+		image: {
+			type: String,
+			required: true,
+		},
+		likes: {
+			type: Number,
+			required: true,
+		},
+		comments: [commentSchema],
+	},
+	{
+		timestamps: true,
 	}
 )
 
 export const post = mongoose.model("post", postSchema);
+export const socialPost = mongoose.model("socialPost", socialPostSchema);
