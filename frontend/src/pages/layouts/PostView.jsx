@@ -81,7 +81,7 @@ const Post = ({ header, body, isVolunteer, isFundraiser, imgSrc, username, showV
 
   // Set whether user is volunteering or donating
   useEffect(() => {
-    axios.get("https://planetpulse.tennisbowling.com/api/user_status", { post_title: header }, { withCredentials: true })
+    axios.post("https://planetpulse.tennisbowling.com/api/user_status", { post_title: header }, { withCredentials: true })
       .then((res) => {
         setVolunteer(res.data.volunteering);
         setDonor(res.data.donating);

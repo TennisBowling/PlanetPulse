@@ -42,7 +42,6 @@ app.get("/", async (req, res) => { // send the authenticated status of the user
 
 app.get("/get_user", async (req, res) => { // send the user object
 	if (checkNotAuthenticated) {
-        console.log(req.user);
 		return res.status(200).send({ user: req.user });
 	}
 });
@@ -156,7 +155,7 @@ app.post("/create_post", async (req, res) => { // create a post
     }
 });
 
-app.get("/user_status", async (req, res) => { // get user status for a post (if volunteering and if donating)
+app.post("/user_status", async (req, res) => { // get user status for a post (if volunteering and if donating)
 	
     try {
 
