@@ -83,6 +83,38 @@ app.get("/user_status", async (req, res) => { // get user status for a post (if 
     }
 });
 
+app.post("/create_social_post", async (req, res) => {
+    try {
+        if ( // check if all required fields are sent
+            !req.body.post.title || !req.body.post.text
+        ) {
+            return res.status(400).send({
+                message: 'Send all required fields: post, post.title, post.text'
+            });
+        }
+
+        if (!req.body.post.image) {
+            req.body.post.image = "https://cdn.tennisbowling.com/hLSUfRvOqjopxuGT-LqxsXwYukIBpkgroQDJKpV4.jpg";
+        }
+
+        var newPost = req.body.post;
+        newPost.username = req.user.username;
+        newPost.likes = 0;
+        newPost.comments = [];
+
+        const userId = req.user._id;
+        let user = await User.findById(userId); 
+        user.set({ socialPosts: user.socialPosts.concat(newPost) }); // add the new socialpost to the user's socialposts
+        await user.save();
+
+
+        return res.status(201).send("Social Post created successfully");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: error.message });
+    }
+});
+
 app.post( // login route
 	"/login",
 	checkNotAuthenticated,

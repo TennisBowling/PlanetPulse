@@ -85,7 +85,7 @@ const CreateSocialPost = () => {
         }
         setLoading(true);
         axios
-            .post('https://planetpulse.tennisbowling.com/api/projects/create_social_post', { post }, { withCredentials: true })
+            .post('https://planetpulse.tennisbowling.com/api/create_social_post', { post }, { withCredentials: true })
             .then(() => {
                 setLoading(false);
                 enqueueSnackbar('Social post created successfully', { variant: 'success' });
