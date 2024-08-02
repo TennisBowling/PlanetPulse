@@ -330,7 +330,6 @@ router.post("/user_liked_social_post", async (req, res) => { // get user status 
             return res.status(400).send({ message: "Social Post not found" });
         }
 
-        console.log(typeof post.likes);
         let liked = post.likes.includes(req.user.username);
         
         return res.status(200).send(liked);

@@ -4,8 +4,10 @@ import { useSnackbar } from "notistack";
 
 const SocialPost = ({ title, body, imgSrc, username, _likes, onDelete }) => {
   const [liked, setLiked] = useState(false);
-  const [likes, setLikes] = useState(_likes);
+  const [likes, setLikes] = useState(0);
   const { enqueueSnackbar } = useSnackbar();
+
+  setLikes(_likes);
 
   useEffect(() => {
     checkLikeStatus();
