@@ -61,7 +61,7 @@ const SocialPostPage = () => {
         if (post.title) {
             axios
                 .post(
-                    "https://planetpulse.tennisbowling.com/api/projects/user_liked_social_post",
+                    "https://planetpulse.tennisbowling.com/api/user_liked_social_post",
                     { post_title: post.title },
                     { withCredentials: true },
                 )

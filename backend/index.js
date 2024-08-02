@@ -49,6 +49,38 @@ app.get("/get_user", async (req, res) => {
     }
 });
 
+app.post("/user_liked_social_post", async (req, res) => {
+    // get user status for a social post (if liked the post)
+    try {
+        var userId = req.user._id;
+        if (req.body.user_id != undefined) {
+            userId = req.body.user_id;
+        }
+
+        if (!req.body.post_title) {
+            return res.status(400).send({ message: "post_title is required" });
+        }
+
+        let users = await User.find();
+        let posts = [];
+        users.forEach((user) => {
+            posts = posts.concat(user.socialPosts);
+        });
+
+        let post = posts.find((post) => post.title === req.body.post_title);
+        if (!post) {
+            return res.status(400).send({ message: "Social Post not found" });
+        }
+
+        let liked = post.likes.includes(req.user.username);
+
+        return res.status(200).send(liked);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: error.message });
+    }
+});
+
 app.post("/like_social_post", async (req, res) => {
     // like a socialpost
     try {

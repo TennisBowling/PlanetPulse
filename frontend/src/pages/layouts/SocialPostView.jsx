@@ -21,7 +21,7 @@ const SocialPost = ({
     const checkLikeStatus = async () => {
         try {
             const response = await axios.post(
-                "https://planetpulse.tennisbowling.com/api/projects/user_liked_social_post",
+                "https://planetpulse.tennisbowling.com/api/user_liked_social_post",
                 { post_title: title },
                 { withCredentials: true },
             );
