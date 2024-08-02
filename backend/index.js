@@ -303,37 +303,42 @@ app.post("/create_comment", async (req, res) => {
     try {
         if (!req.body.comment.text || !req.body.original_post_title) {
             return res.status(400).send({
-                message:
-                "Send all required fields: comment.text",
+                message: "Send all required fields: comment.text",
             });
         }
-        
-        
+
         var comment = req.body.comment;
         comment.username = req.user.username;
         comment.likes = [];
 
         let users = await User.find();
+        let commentAdded = false;
+
         users.forEach((user) => {
             user.socialPosts.forEach((post) => {
-                if (post.title == req.body.original_post_title) {
+                if (post.title === req.body.original_post_title) {
                     var newPost = post;
                     newPost.comments.push(comment);
-                    user.set({
-                        socialPosts: user.socialPosts.filter((p) => p.title !== req.body.original_post_title).push(newPost),
-                    });
+                    user.socialPosts = user.socialPosts.filter((p) => p.title !== req.body.original_post_title);
+                    user.socialPosts.push(newPost);
+                    user.save();
 
-                    return res.status(200).send("Comment added.");
+                    commentAdded = true;
                 }
             });
         });
 
-        return res.status(400).send({message: "Couldn't find original social post"});
+        if (commentAdded) {
+            return res.status(200).send("Comment added.");
+        } else {
+            return res.status(400).send({ message: "Couldn't find original social post" });
+        }
     } catch (error) {
         console.log(error);
-        res.status(500).send({ message: error.message });
+        return res.status(500).send({ message: error.message });
     }
 });
+
 
 app.post("/like_comment", async (req, res) => {
     try {
