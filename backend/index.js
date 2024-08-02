@@ -207,7 +207,7 @@ app.post("/create_social_post", async (req, res) => {
 
         var newPost = req.body.post;
         newPost.username = req.user.username;
-        newPost.likes = 0;
+        newPost.likes = [];
         newPost.comments = [];
 
         const userId = req.user._id;
