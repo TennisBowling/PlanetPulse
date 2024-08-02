@@ -13,7 +13,7 @@ const Header = (props) => {
   // Log out the user
   const logout = () => {
     axios
-      .delete("http://localhost:8080/logout", { withCredentials: true })
+      .delete("https://planetpulse.tennisbowling.com/api/logout", { withCredentials: true })
       .then((response) => {
         enqueueSnackbar("Logout Success", {
           variant: "success",
@@ -31,7 +31,7 @@ const Header = (props) => {
     setLoading(true);
     setLoggedIn(false);
     let res = axios
-      .get("http://localhost:8080/", { withCredentials: true })
+      .get("https://planetpulse.tennisbowling.com/api/", { withCredentials: true })
       .then((res) => {
         if (res.data.authenticated) {
           setLoggedIn(true);

@@ -19,7 +19,7 @@ const Home = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:8080/", { withCredentials: true })
+      .get("https://planetpulse.tennisbowling.com/api/", { withCredentials: true })
       .then((res) => {
         if (!res.data.authenticated) {
           Navigate("/login");
@@ -33,7 +33,7 @@ const Home = () => {
 
   // Get all posts available
   useEffect(() => {
-    axios.get("http://localhost:8080/projects/get_all_posts")
+    axios.get("https://planetpulse.tennisbowling.com/api/projects/get_all_posts")
       .then((res) => {
         setPosts(res.data);
         setLoading(false);
@@ -42,7 +42,7 @@ const Home = () => {
 
   // Get all social posts available
   useEffect(() => {
-    axios.get("http://localhost:8080/projects/get_all_social_posts")
+    axios.get("https://planetpulse.tennisbowling.com/api/projects/get_all_social_posts")
       .then((res) => {
         setSocialPosts(res.data);
         setLoading(false);

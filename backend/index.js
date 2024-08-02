@@ -22,7 +22,7 @@ app.use( // session middleware
 );
 
 app.use(cors({
-	origin: 'http://localhost:5173',
+	origin: 'https://planetpulse.tennisbowling.com',
 	methods: "GET, POST, PUT, DELETE",
 	credentials: true,
 }));

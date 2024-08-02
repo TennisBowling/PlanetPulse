@@ -19,7 +19,7 @@ const SocialPostPage = () => {
     useEffect(() => {
         setLoading(true);
         axios
-            .get("http://localhost:8080/", { withCredentials: true })
+            .get("https://planetpulse.tennisbowling.com/api/", { withCredentials: true })
             .then((res) => {
                 if (!res.data.authenticated) {
                     Navigate("../login");
@@ -34,7 +34,7 @@ const SocialPostPage = () => {
     // Get the current social post
     useEffect(() => {
         axios.post(
-            'http://localhost:8080/projects/get_social_post',
+            'https://planetpulse.tennisbowling.com/api/projects/get_social_post',
             { post_title: id },
             { withCredentials: true }
         )
@@ -51,7 +51,7 @@ const SocialPostPage = () => {
     useEffect(() => {
         if (post.title) {
             axios.post(
-                'http://localhost:8080/projects/user_liked_social_post',
+                'https://planetpulse.tennisbowling.com/api/projects/user_liked_social_post',
                 { post_title: post.title },
                 { withCredentials: true }
             )
@@ -66,7 +66,7 @@ const SocialPostPage = () => {
 
     const handleLike = () => {
         axios.post(
-            'http://localhost:8080/projects/like_social_post',
+            'https://planetpulse.tennisbowling.com/api/projects/like_social_post',
             { post_title: post.title },
             { withCredentials: true }
         )

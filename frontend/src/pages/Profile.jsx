@@ -19,7 +19,7 @@ const Profile = () => {
     // Check if user is logged in
     useEffect(() => {
         setLoading(true);
-        axios.get("http://localhost:8080/", { withCredentials: true })
+        axios.get("https://planetpulse.tennisbowling.com/api/", { withCredentials: true })
             .then((res) => {
                 if (!res.data.authenticated) {
                     Navigate("/login");
@@ -33,7 +33,7 @@ const Profile = () => {
 
     // Get the user's own posts
     useEffect(() => {
-        axios.get("http://localhost:8080/projects/get_user_posts", { withCredentials: true })
+        axios.get("https://planetpulse.tennisbowling.com/api/projects/get_user_posts", { withCredentials: true })
             .then((res) => {
                 setPosts(res.data);
                 setLoading(false);
@@ -42,7 +42,7 @@ const Profile = () => {
 
     // Get the user's own social posts
     useEffect(() => {
-        axios.get("http://localhost:8080/projects/get_user_social_posts", { withCredentials: true })
+        axios.get("https://planetpulse.tennisbowling.com/api/projects/get_user_social_posts", { withCredentials: true })
             .then((res) => {
                 setSocialPosts(res.data);
                 setLoading(false);
@@ -51,7 +51,7 @@ const Profile = () => {
 
     // Get information on the user
     useEffect(() => {
-        axios.get("http://localhost:8080/get_user", { withCredentials: true })
+        axios.get("https://planetpulse.tennisbowling.com/api/get_user", { withCredentials: true })
             .then((res) => {
                 setUser(res.data.user);
             })
@@ -59,7 +59,7 @@ const Profile = () => {
 
     // Delete the post
     const handleDeletePost = (post_title) => {
-        axios.post(`http://localhost:8080/projects/delete_post`, { post_title: post_title }, { withCredentials: true })
+        axios.post(`https://planetpulse.tennisbowling.com/api/projects/delete_post`, { post_title: post_title }, { withCredentials: true })
             .then((res) => {
                 setPosts(posts.filter((post) => post.title !== post_title));
                 enqueueSnackbar("Post Deleted", { variant: "success", autoHideDuration: 1000 });
@@ -71,7 +71,7 @@ const Profile = () => {
 
     // Delete the social post
     const handleDeleteSocialPost = (post_title) => {
-        axios.post(`http://localhost:8080/projects/delete_social_post`, { post_title: post_title }, { withCredentials: true })
+        axios.post(`https://planetpulse.tennisbowling.com/api/projects/delete_social_post`, { post_title: post_title }, { withCredentials: true })
             .then((res) => {
                 setSocialPosts(socialPosts.filter((post) => post.title !== post_title));
                 enqueueSnackbar("Social Post Deleted", { variant: "success", autoHideDuration: 1000 });

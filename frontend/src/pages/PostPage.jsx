@@ -25,7 +25,7 @@ const PostPage = () => {
     useEffect(() => {
         setLoading(true);
         axios
-            .get("http://localhost:8080/", { withCredentials: true })
+            .get("https://planetpulse.tennisbowling.com/api/", { withCredentials: true })
             .then((res) => {
                 console.log(res.data)
                 if (!res.data.authenticated) {
@@ -41,7 +41,7 @@ const PostPage = () => {
     // Get the current post
     useEffect(() => {
         axios.post(
-            'http://localhost:8080/projects/get_post',
+            'https://planetpulse.tennisbowling.com/api/projects/get_post',
             { post_title: id },
             { withCredentials: true }
         )
@@ -57,13 +57,13 @@ const PostPage = () => {
     // Get the user's status on the post
     
     
-    
+
 
     // Check if user pressed donate
     useEffect(() => {
         if (clickedDonate) {
             setVolunteer(true)
-            axios.post("http://localhost:8080/projects/donate", { post_title: post.title }, { withCredentials: true })
+            axios.post("https://planetpulse.tennisbowling.com/api/projects/donate", { post_title: post.title }, { withCredentials: true })
                 .then((res) => {
                     enqueueSnackbar("Donating", { variant: "success", autoHideDuration: 1000 });
                 })
@@ -81,7 +81,7 @@ const PostPage = () => {
     useEffect(() => {
         if (clickedVolunteer) {
             setVolunteer(true)
-            axios.post("http://localhost:8080/projects/volunteer", { post_title: post.title }, { withCredentials: true })
+            axios.post("https://planetpulse.tennisbowling.com/api/projects/volunteer", { post_title: post.title }, { withCredentials: true })
                 .then((res) => {
                     enqueueSnackbar("Volunteering", { variant: "success", autoHideDuration: 1000 });
                 })

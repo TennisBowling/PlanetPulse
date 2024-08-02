@@ -12,7 +12,7 @@ const SocialPost = ({ title, body, imgSrc, username, likes, onDelete }) => {
 
   const checkLikeStatus = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/projects/user_liked_social_post", 
+      const response = await axios.post("https://planetpulse.tennisbowling.com/api/projects/user_liked_social_post", 
         { post_title: title }, 
         { withCredentials: true }
       );
@@ -24,7 +24,7 @@ const SocialPost = ({ title, body, imgSrc, username, likes, onDelete }) => {
 
   const handleLike = async () => {
     try {
-      await axios.post("http://localhost:8080/projects/like_social_post", 
+      await axios.post("https://planetpulse.tennisbowling.com/api/projects/like_social_post", 
         { post_title: title }, 
         { withCredentials: true }
       );

@@ -45,7 +45,7 @@ const Post = ({ header, body, isVolunteer, isFundraiser, imgSrc, username, showV
   useEffect(() => {
     if (clickedDonate) {
       setVolunteer(true)
-      axios.post("http://localhost:8080/projects/donate", { post_title: header }, { withCredentials: true })
+      axios.post("https://planetpulse.tennisbowling.com/api/projects/donate", { post_title: header }, { withCredentials: true })
         .then((res) => {
           enqueueSnackbar("Donating", { variant: "success", autoHideDuration: 1000 });
           Navigate("/donate")
@@ -64,7 +64,7 @@ const Post = ({ header, body, isVolunteer, isFundraiser, imgSrc, username, showV
   useEffect(() => {
     if (clickedVolunteer) {
       setVolunteer(true)
-      axios.post("http://localhost:8080/projects/volunteer", { post_title: header }, { withCredentials: true })
+      axios.post("https://planetpulse.tennisbowling.com/api/projects/volunteer", { post_title: header }, { withCredentials: true })
         .then((res) => {
           enqueueSnackbar("Volunteering", { variant: "success", autoHideDuration: 1000 });
         })
@@ -81,7 +81,7 @@ const Post = ({ header, body, isVolunteer, isFundraiser, imgSrc, username, showV
 
   // Set whether user is volunteering or donating
   useEffect(() => {
-    axios.get("http://localhost:8080/user_status", { post_title: header }, { withCredentials: true })
+    axios.get("https://planetpulse.tennisbowling.com/api/user_status", { post_title: header }, { withCredentials: true })
       .then((res) => {
         setVolunteer(res.data.volunteering);
         setDonor(res.data.donating);

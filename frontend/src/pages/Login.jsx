@@ -13,7 +13,7 @@ const Login = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get("http://localhost:8080/", { withCredentials: true })
+			.get("https://planetpulse.tennisbowling.com/api/", { withCredentials: true })
 			.then((res) => {
 				if (res.data.authenticated) {
 					Navigate("/");
@@ -33,7 +33,7 @@ const Login = () => {
 			password,
 		};
 		axios
-			.post("http://localhost:8080/login", data, { withCredentials: true })
+			.post("https://planetpulse.tennisbowling.com/api/login", data, { withCredentials: true })
 			.then((res) => {
 				enqueueSnackbar("Login Success", { variant: "success", autoHideDuration: 1000 });
 				Navigate("/");

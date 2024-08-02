@@ -21,7 +21,7 @@ const CreateSocialPost = () => {
     // Check if user is logged in
     useEffect(() => {
         axios
-            .get("http://localhost:8080/", { withCredentials: true })
+            .get("https://planetpulse.tennisbowling.com/api/", { withCredentials: true })
             .then((res) => {
                 if (!res.data.authenticated) {
                     navigate("/login");
@@ -34,7 +34,7 @@ const CreateSocialPost = () => {
 
     // Get information on the user
     useEffect(() => {
-        axios.get("http://localhost:8080/get_user", { withCredentials: true })
+        axios.get("https://planetpulse.tennisbowling.com/api/get_user", { withCredentials: true })
             .then((res) => {
                 setUser(res.data.user);
             })
@@ -85,7 +85,7 @@ const CreateSocialPost = () => {
         }
         setLoading(true);
         axios
-            .post('http://localhost:8080/projects/create_social_post', { post }, { withCredentials: true })
+            .post('https://planetpulse.tennisbowling.com/api/projects/create_social_post', { post }, { withCredentials: true })
             .then(() => {
                 setLoading(false);
                 enqueueSnackbar('Social post created successfully', { variant: 'success' });

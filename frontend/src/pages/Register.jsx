@@ -15,7 +15,7 @@ const Register = () => {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get("http://localhost:8080/", { withCredentials: true })
+			.get("https://planetpulse.tennisbowling.com/api/", { withCredentials: true })
 			.then((res) => {
 				if (res.data.authenticated) {
 					Navigate("/profile");
@@ -38,7 +38,7 @@ const Register = () => {
 			return;
 		}
 		axios
-			.post("http://localhost:8080/register", data, { withCredentials: true })
+			.post("https://planetpulse.tennisbowling.com/api/register", data, { withCredentials: true })
 			.then((res) => {
 				enqueueSnackbar("Registered", { variant: "success", autoHideDuration: 1000 });
 				Navigate("/profile");

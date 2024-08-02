@@ -18,7 +18,7 @@ const Search = () => {
 	// Check if user is logged in
 	useEffect(() => {
 		axios
-			.get("http://localhost:8080/", { withCredentials: true })
+			.get("https://planetpulse.tennisbowling.com/api/", { withCredentials: true })
 			.then((res) => {
 				if (!res.data.authenticated) {
 					Navigate("/login");
@@ -32,7 +32,7 @@ const Search = () => {
 
 	// Search for posts once user submits query
 	useEffect(() => {
-		axios.post("http://localhost:8080/projects/search_posts", { search_query: search, withCredentials: true })
+		axios.post("https://planetpulse.tennisbowling.com/api/projects/search_posts", { search_query: search, withCredentials: true })
 			.then((res) => {
 				setPosts(res.data);
 				setLoading(false);
