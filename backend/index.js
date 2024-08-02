@@ -424,17 +424,13 @@ app.get("/get_post_comments", async (req, res) => {
         
         for (const user of users) {
             const post = user.posts.find(p => p.title === req.query.post_title);
-            if (post) {
-                // Sort comments by date (assuming there's a createdAt field)
-                const sortedComments = post.comments.sort((a, b) => b.createdAt - a.createdAt);
-                
+            if (post) {                
                 return res.status(200).json({
                     post_title: post.title,
-                    comments: sortedComments.map(comment => ({
+                    comments: post.comments.map(comment => ({
                         text: comment.text,
                         username: comment.username,
                         likes: comment.likes.length,
-                        createdAt: comment.createdAt
                     }))
                 });
             }
