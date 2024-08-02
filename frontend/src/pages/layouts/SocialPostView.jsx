@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSnackbar } from "notistack";
 
-const SocialPost = ({ title, body, imgSrc, username, likes, onDelete }) => {
+const SocialPost = ({ title, body, imgSrc, username, _likes, onDelete }) => {
   const [liked, setLiked] = useState(false);
-  const [likes, setLikes] = useState(likes);
+  const [likes, setLikes] = useState(_likes);
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
