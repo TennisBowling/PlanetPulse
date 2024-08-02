@@ -10,6 +10,7 @@ const CreateSocialPost = () => {
     const [title, setTitle] = useState('');
     const [text, setText] = useState('');
     const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState({});
     const [image, setImage] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
     const [imagelink, setImageLink] = useState(null);
@@ -30,6 +31,14 @@ const CreateSocialPost = () => {
                 enqueueSnackbar("Error", { variant: "error", autoHideDuration: 1000 });
             });
     }, []);
+
+    // Get information on the user
+    useEffect(() => {
+        axios.get("http://localhost:8080/get_user", { withCredentials: true })
+            .then((res) => {
+                setUser(res.data.user);
+            })
+    }, [])
 
     // Check if new image has been requested for upload
     const handleImageChange = (e) => {
@@ -151,12 +160,12 @@ const CreateSocialPost = () => {
             {/* Preview of the social post */}
             {title && text && (
                 <div className="mt-8">
-                    <h2 className="text-2xl text-white font-bold mb-4">Post Preview:</h2>
+                    <h2 className="text-2xl text-white font-bold mb-4" style={{ textAlign: 'center' }}>Post Preview:</h2>
                     <SocialPostView
                         title={title}
                         body={text}
                         imgSrc={imageUrl || imagelink}
-                        username="" // We should set this
+                        username={user.username} // We should set this
                         likes={0}
                     />
                 </div>

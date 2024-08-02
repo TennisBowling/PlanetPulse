@@ -187,47 +187,7 @@ router.get("/get_all_posts", async (req, res) => { // get all posts
     }
 });
 
-router.post("/user_status", async (req, res) => { // get user status for a post (if volunteering and if donating)
-    try {
-        var userId = req.user._id;
-        if (req.body.user_id != undefined) {
-            userId = req.body.user_id;
-        }
 
-        if (!req.body.post_title) {
-            return res.status(400).send({ message: "post_title is required" });
-        }
-
-        let users = await User.find();
-        let posts = [];
-        users.forEach(user => {
-            posts = posts.concat(user.posts);
-        });
-
-        let post = posts.find(post => post.title === req.body.post_title)
-        if (!post) {
-            return res.status(400).send({ message: "Post not found" });
-        }
-
-        let donating = false;
-        let volunteering = false;
-        if (post.donors.includes(req.user.username)) { // check if list of donors includes user's username
-            donating = true;
-        }
-        if (post.volunteers.includes(req.user.username)) { // same logic as for donors
-            volunteering = true;
-        }
-        
-
-        return res.status(200).send({ "donating": donating, "volunteering": volunteering });
-
-
-    }
-    catch (error) {
-        console.log(error);
-        res.status(500).send({ message: error.message });
-    }
-});
 
 router.post("/search_posts", async (req, res) => { // search posts using fuzzy searching library fuse
     try {
