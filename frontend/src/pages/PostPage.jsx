@@ -81,7 +81,7 @@ const PostPage = () => {
     useEffect(() => {
         if (clickedVolunteer) {
             setVolunteer(true)
-            axios.post("https://planetpulse.tennisbowling.com/api/projects/volunteer", { post_title: post.title }, { withCredentials: true })
+            axios.post("https://planetpulse.tennisbowling.com/api/volunteer", { post_title: post.title }, { withCredentials: true })
                 .then((res) => {
                     enqueueSnackbar("Volunteering", { variant: "success", autoHideDuration: 1000 });
                 })

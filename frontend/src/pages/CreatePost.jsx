@@ -82,7 +82,7 @@ const CreatePost = () => {
 		}
 		setLoading(true);
 		axios
-			.post('https://planetpulse.tennisbowling.com/api/projects/create_post', { post }, { withCredentials: true })
+			.post('https://planetpulse.tennisbowling.com/api/create_post', { post }, { withCredentials: true })
 			.then(() => {
 				setLoading(false);
 				enqueueSnackbar('Post created successfully', { variant: 'success' });

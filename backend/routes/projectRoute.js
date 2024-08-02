@@ -5,81 +5,10 @@ import Fuse from 'fuse.js';
 
 const router = express.Router();
 
-router.post("/create_post", async (req, res) => { // create a post
-    try {
-        if ( // check if all required fields are sent
-            !req.body.post.title || !req.body.post.text || req.body.post.isVolunteer == undefined || req.body.post.isFundraiser == undefined 
-        ) {
-            return res.status(400).send({
-                message: 'Send all required fields: post, post.title, post.text, post.isVolunteer, post.isFundraiser'
-            });
-        }
-
-        var newPost = req.body.post;
-        newPost.username = req.user.username;
-        newPost.volunteers = [];
-        newPost.donors = [];
-        newPost.numVolunteers = 0;
-        newPost.numDonors = 0;
-
-        if(newPost.isVolunteer == "true") { // convert from string to boolean, something within js is broken and randomly decides to send "true" instead of true and "false" instead of false
-            newPost.isVolunteer = true;
-        } if(newPost.isVolunteer == "false"){
-            newPost.isVolunteer = false;
-        }
-        if(newPost.isFundraiser == "true") {
-            newPost.isFundraiser = true;
-        } if(newPost.isFundraiser == "false") {
-            newPost.isFundraiser = false;
-        }
-
-        const userId = req.user._id;
-        let user = await User.findById(userId); // find the user based on their id
-        user.set({ posts: user.posts.concat(newPost) }); // add the new post to the user's posts
-        await user.save();
 
 
-        return res.status(201).send("Post created successfully");
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({ message: error.message });
-    }
-});
 
 
-router.post("/volunteer", async (req, res) => { // volunteer for a post
-    try {
-        if (!req.body.post_title) {
-            return res.status(400).send({ message: "post_title is required" });
-        }
-
-        let users = await User.find();
-        let posts = [];
-        users.forEach(user => {
-            posts = posts.concat(user.posts); // add the post to the posts array
-        });
-
-        let post = posts.find(post => post.title === req.body.post_title);
-        if (!post) {
-            return res.status(400).send({ message: "Post not found" });
-        }
-
-        if (post.volunteers.includes(req.user.username)) {
-            return res.status(400).send({ message: "User is already volunteering for this post" });
-        }
-
-        let user = await User.findOne({ username: post.username })
-        user.set({ posts: user.posts.map(p => p.title === req.body.post_title ? { ...p, volunteers: p.volunteers.concat(req.user.username) } : p) }); // add the user to the volunteers list in the post
-        user.set({ posts: user.posts.map(p => p.title === req.body.post_title ? { ...p, numVolunteers: p.numVolunteers + 1 } : p) }); // add 1 to the number of volunteers in the post
-        await user.save()
-
-        return res.status(200).send("Volunteered successfully");
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({ message: error.message });
-    }
-})
 
 router.post("/donate", async (req, res) => { // donate to a post
     try {
@@ -374,39 +303,6 @@ router.post("/get_social_post", async (req, res) => { // get a post using the ti
         return res.status(200).send(post);
     }
     catch (error) {
-        console.log(error);
-        res.status(500).send({ message: error.message });
-    }
-});
-
-router.post("/like_social_post", async (req, res) => { // like a socialpost
-    try {
-        if (!req.body.post_title) {
-            return res.status(400).send({ message: "post_title is required" });
-        }
-
-        let users = await User.find();
-        let posts = [];
-        users.forEach(user => {
-            posts = posts.concat(user.socialPosts);
-        });
-
-        let post = posts.find(post => post.title === req.body.post_title);
-        if (!post) {
-            return res.status(400).send({ message: "Post not found" });
-        }
-
-        if (post.likes.includes(req.user.username)) {
-            return res.status(400).send({ message: "User already likes this post" });
-        }
-
-        let user = await User.findOne({ username: post.username });
-        user.set({ socialPosts: user.socialPosts.map(p => p.title === req.body.post_title ? { ...p, likes: p.likes.concat(req.user.username) } : p) });
-        await user.save();
-
-        return res.status(200).send("Liked successfully");
-
-    } catch (error) {
         console.log(error);
         res.status(500).send({ message: error.message });
     }
