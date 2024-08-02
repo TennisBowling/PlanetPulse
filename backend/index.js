@@ -283,12 +283,12 @@ app.post("/create_comment", async (req, res) => {
 
         let users = await User.find();
         users.forEach((user) => {
-            user.posts.forEach((post) => {
+            user.socialPosts.forEach((post) => {
                 if (post.title == req.body.original_post_title) {
                     var newPost = post;
                     newPost.comments.push(comment);
                     user.set({
-                        posts: user.posts.filter((p) => p.title !== req.body.original_post_title).push(newPost),
+                        socialPosts: user.socialPosts.filter((p) => p.title !== req.body.original_post_title).push(newPost),
                     });
 
                     return res.status(200).send("Comment added.");
@@ -296,7 +296,7 @@ app.post("/create_comment", async (req, res) => {
             });
         });
 
-        return res.status(400).send({message: "Couldn't find original post"});
+        return res.status(400).send({message: "Couldn't find original social post"});
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: error.message });
@@ -315,7 +315,7 @@ app.post("/like_comment", async (req, res) => {
         let commentLiked = false;
 
         for (const user of users) {
-            const post = user.posts.find(p => p.title === req.body.original_post_title);
+            const post = user.socialPosts.find(p => p.title === req.body.original_post_title);
             if (post) {
                 const comment = post.comments.find(c => c.text === req.body.comment_text);
                 if (comment) {
@@ -353,7 +353,7 @@ app.get("/user_liked_comment", async (req, res) => {
         const users = await User.find();
         
         for (const user of users) {
-            const post = user.posts.find(p => p.title === req.query.original_post_title);
+            const post = user.socialPosts.find(p => p.title === req.query.original_post_title);
             if (post) {
                 const comment = post.comments.find(c => c.text === req.query.comment_text);
                 if (comment) {
@@ -382,15 +382,15 @@ app.delete("/delete_comment", async (req, res) => {
         let commentDeleted = false;
 
         for (const user of users) {
-            const postIndex = user.posts.findIndex(p => p.title === req.body.original_post_title);
+            const postIndex = user.socialPosts.findIndex(p => p.title === req.body.original_post_title);
             if (postIndex !== -1) {
-                const commentIndex = user.posts[postIndex].comments.findIndex(c => c.text === req.body.comment_text);
+                const commentIndex = user.socialPosts[postIndex].comments.findIndex(c => c.text === req.body.comment_text);
                 if (commentIndex !== -1) {
                     // Check if the current user is the comment author or the post author
-                    if (user.posts[postIndex].comments[commentIndex].username === req.user.username || 
-                        user.posts[postIndex].username === req.user.username) {
+                    if (user.socialPosts[postIndex].comments[commentIndex].username === req.user.username || 
+                        user.socialPosts[postIndex].username === req.user.username) {
                         
-                        user.posts[postIndex].comments.splice(commentIndex, 1);
+                        user.socialPosts[postIndex].comments.splice(commentIndex, 1);
                         await user.save();
                         commentDeleted = true;
                         break;
@@ -423,7 +423,7 @@ app.get("/get_post_comments", async (req, res) => {
         const users = await User.find();
         
         for (const user of users) {
-            const post = user.posts.find(p => p.title === req.query.post_title);
+            const post = user.socialPosts.find(p => p.title === req.query.post_title);
             if (post) {                
                 return res.status(200).json({
                     post_title: post.title,
