@@ -51,11 +51,9 @@ app.get("/user_status", async (req, res) => { // get user status for a post (if 
 	
     try {
 
-		
-        /*if (!req.body.post_title) {
+        if (!req.body.post_title) {
             return res.status(400).send({ message: "post_title is required" });
-        }*/
-	    req.body.post_title = "normal post";
+        }
 
         let users = await User.find();
         let posts = [];
@@ -77,11 +75,7 @@ app.get("/user_status", async (req, res) => { // get user status for a post (if 
             volunteering = true;
         }
         
-		console.log("username is", req.user.username);
-
         return res.status(200).send({ "donating": donating, "volunteering": volunteering });
-
-
     }
     catch (error) {
         console.log(error);

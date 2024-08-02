@@ -250,11 +250,15 @@ router.post("/get_post", async (req, res) => { // get a post using the title
 router.post("/create_social_post", async (req, res) => {
     try {
         if ( // check if all required fields are sent
-            !req.body.post.title || !req.body.post.text || !req.body.post.image
+            !req.body.post.title || !req.body.post.text
         ) {
             return res.status(400).send({
-                message: 'Send all required fields: post, post.title, post.text, post.image'
+                message: 'Send all required fields: post, post.title, post.text'
             });
+        }
+
+        if (!req.body.post.image) {
+            req.body.post.image = "https://cdn.tennisbowling.com/hLSUfRvOqjopxuGT-LqxsXwYukIBpkgroQDJKpV4.jpg";
         }
 
         var newPost = req.body.post;
