@@ -4,6 +4,7 @@ import { useSnackbar } from "notistack";
 
 const SocialPost = ({ title, body, imgSrc, username, likes, onDelete }) => {
   const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(likes);
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -29,6 +30,7 @@ const SocialPost = ({ title, body, imgSrc, username, likes, onDelete }) => {
         { withCredentials: true }
       );
       setLiked(true);
+      setLikes(likes + 1);
       enqueueSnackbar("Post liked successfully", { variant: "success" });
     } catch (error) {
       if (error.response?.data?.message === "User already likes this post") {
