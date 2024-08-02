@@ -342,28 +342,37 @@ app.post("/create_comment", async (req, res) => {
 
 app.post("/like_comment", async (req, res) => {
     try {
-        if (!req.body.original_post_title || !req.body.comment_text) {
+        const { original_post_title, comment_text } = req.body;
+        const username = req.user.username;
+
+        if (!original_post_title || !comment_text) {
             return res.status(400).send({
                 message: "Send all required fields: original_post_title, comment_text",
             });
         }
 
-        const users = await User.find();
+        const users = await User.find({
+            "socialPosts.title": original_post_title,
+            "socialPosts.comments.text": comment_text,
+        });
+
+        if (users.length === 0) {
+            return res.status(404).send({ message: "Comment not found" });
+        }
+
         let commentLiked = false;
 
         for (const user of users) {
-            const post = user.socialPosts.find(p => p.title === req.body.original_post_title);
+            const post = user.socialPosts.find(p => p.title === original_post_title);
             if (post) {
-                const comment = post.comments.find(c => c.text === req.body.comment_text);
-                if (comment) {
-                    if (!comment.likes.includes(req.user.username)) {
-                        comment.likes.push(req.user.username);
-                        await user.save();
-                        commentLiked = true;
-                    } else {
-                        return res.status(400).send({ message: "User has already liked this comment" });
-                    }
+                const comment = post.comments.find(c => c.text === comment_text);
+                if (comment && !comment.likes.includes(username)) {
+                    comment.likes.push(username);
+                    await user.save();
+                    commentLiked = true;
                     break;
+                } else if (comment && comment.likes.includes(username)) {
+                    return res.status(400).send({ message: "User has already liked this comment" });
                 }
             }
         }
@@ -371,13 +380,14 @@ app.post("/like_comment", async (req, res) => {
         if (commentLiked) {
             return res.status(200).send({ message: "Comment liked successfully" });
         } else {
-            return res.status(404).send({ message: "Comment not found" });
+            return res.status(500).send({ message: "Failed to like the comment" });
         }
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: error.message });
     }
 });
+
 
 app.get("/user_liked_comment", async (req, res) => {
     try {
