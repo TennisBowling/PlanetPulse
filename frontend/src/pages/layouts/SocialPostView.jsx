@@ -57,7 +57,7 @@ const SocialPost = ({
     return (
         <div className="box-border max-w-md mx-auto rounded-xl shadow-md overflow-hidden md:max-w-2xl mb-4 bg-gray-900">
             <div className="p-4">
-                <h2 className="font-bold text-lg text-white">{title}</h2>
+                <a href={"/socialpostpage/" + title} className="font-bold block text-lg leading-tight font-large text-white hover:underline">{title}</a>
                 <p className="text-md text-white">{username}</p>
                 {imgSrc && (
                     <img

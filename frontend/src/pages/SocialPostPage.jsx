@@ -5,10 +5,13 @@ import axios from "axios";
 import Sidebar from "./layouts/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import Comment from "./layouts/CommentView";
+
 
 const SocialPostPage = () => {
     const { id } = useParams();
     const [post, setPost] = useState({});
+    const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [liked, setLiked] = useState(false);
 
@@ -71,6 +74,22 @@ const SocialPostPage = () => {
         }
     }, [post]);
 
+    useEffect(() => {
+        if (post.title) {
+            axios.get("https://planetpulse.tennisbowling.com/api/get_post_comments", {
+                params: { post_title: post.title },
+                withCredentials: true,
+            })
+            .then((response) => {
+                setComments(response.data.comments);
+            })
+            .catch((error) => {
+                console.log(error);
+                enqueueSnackbar("Error fetching comments", { variant: "error" });
+            });
+        }
+    }, [post.title]);
+
     const handleLike = () => {
         axios
             .post(
@@ -107,57 +126,61 @@ const SocialPostPage = () => {
             });
     };
 
+    const handleCommentDelete = (deletedCommentText) => {
+        setComments(comments.filter(comment => comment.text !== deletedCommentText));
+    };
+
     return (
         <>
-            <Sidebar />
-            <Header name={window.location.pathname} />
-            <div className="min-h-screen bg-gray-800 flex flex-col justify-center items-center">
-                <div className="max-w-lg w-full bg-gray-900 shadow-md rounded-md overflow-hidden">
-                    <div className="p-6">
-                        <h1 className="text-2xl font-bold mb-4 text-white">
-                            {post.title}
-                        </h1>
-                        <p className="mb-2 text-gray-300">
-                            Posted by {post.username}
-                        </p>
-                        {post.image ? (
-                            <img
-                                src={post.image}
-                                alt="Post"
-                                className="w-full h-auto mb-4"
-                            />
-                        ) : (
-                            <img
-                                src="/images/logo.png"
-                                alt="Post"
-                                className="w-full h-auto mb-4"
-                            />
-                        )}
-                        <p className="mb-4 text-white">{post.text}</p>
-                        <div className="flex justify-between">
-                            <button
-                                onClick={handleLike}
-                                className={`${
-                                    liked
-                                        ? "bg-blue-600"
-                                        : "bg-blue-500 hover:bg-blue-600"
-                                } text-white font-semibold py-1 px-4 rounded-md`}
-                            >
-                                {liked ? "Liked" : "Like"} (
-                                {post.likes?.length || 0})
-                            </button>
-                            <a
-                                href="/"
-                                className="mt-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-4 rounded-md"
-                            >
-                                Go Back
-                            </a>
-                        </div>
-                    </div>
+          <Sidebar />
+          <Header name={window.location.pathname} />
+          <div className="min-h-screen bg-gray-800 flex flex-col items-center py-8">
+            <div className="max-w-2xl w-full bg-gray-900 shadow-md rounded-md overflow-hidden mb-6">
+              <div className="p-6">
+                <h1 className="text-2xl font-bold mb-4 text-white">{post.title}</h1>
+                <p className="mb-2 text-gray-300">Posted by {post.username}</p>
+                {post.image ? (
+                  <img src={post.image} alt="Post" className="w-full h-auto mb-4" />
+                ) : (
+                  <img src="/images/logo.png" alt="Post" className="w-full h-auto mb-4" />
+                )}
+                <p className="mb-4 text-white">{post.text}</p>
+                <div className="flex justify-between">
+                  <button
+                    onClick={handleLike}
+                    className={`${
+                      liked ? "bg-blue-600" : "bg-blue-500 hover:bg-blue-600"
+                    } text-white font-semibold py-1 px-4 rounded-md`}
+                  >
+                    {liked ? "Liked" : "Like"} ({post.likes?.length || 0})
+                  </button>
+                  <a
+                    href="/"
+                    className="mt-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-4 rounded-md"
+                  >
+                    Go Back
+                  </a>
                 </div>
+              </div>
             </div>
+            
+            <div className="max-w-2xl w-full">
+              <h2 className="text-xl font-bold mb-4 text-white">Comments</h2>
+              {comments.map((comment, index) => (
+                <Comment
+                  key={index}
+                  text={comment.text}
+                  username={comment.username}
+                  likes={comment.likes}
+                  originalPostTitle={post.title}
+                  onDelete={() => handleCommentDelete(comment.text)}
+                />
+              ))}
+            </div>
+          </div>
         </>
-    );
+      );
+      
 };
 
 export default SocialPostPage;

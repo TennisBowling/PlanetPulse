@@ -55,40 +55,40 @@ app.post("/like_social_post", async (req, res) => {
         if (!req.body.post_title) {
             return res.status(400).send({ message: "post_title is required" });
         }
-
+        
         let users = await User.find();
         let posts = [];
         users.forEach((user) => {
             posts = posts.concat(user.socialPosts);
         });
-
+        
         let post = posts.find((post) => post.title === req.body.post_title);
         if (!post) {
             return res.status(400).send({ message: "Post not found" });
         }
-
+        
         // todo: move this to index.js and figure out what to do instead of .includes
         if (post.likes.includes(req.user.username)) {
             return res
-                .status(400)
-                .send({ message: "User already likes this post" });
+            .status(400)
+            .send({ message: "User already likes this post" });
         }
-
+        
         let user = await User.findOne({ username: post.username });
         user.set({
             socialPosts: user.socialPosts.map((p) =>
                 p.title === req.body.post_title
-                    ? { ...p, likes: p.likes.concat(req.user.username) }
-                    : p,
-            ),
-        });
-        await user.save();
-
-        return res.status(200).send("Liked successfully");
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({ message: error.message });
-    }
+            ? { ...p, likes: p.likes.concat(req.user.username) }
+            : p,
+        ),
+    });
+    await user.save();
+    
+    return res.status(200).send("Liked successfully");
+} catch (error) {
+    console.log(error);
+    res.status(500).send({ message: error.message });
+}
 });
 
 app.post("/volunteer", async (req, res) => {
@@ -97,51 +97,51 @@ app.post("/volunteer", async (req, res) => {
         if (!req.body.post_title) {
             return res.status(400).send({ message: "post_title is required" });
         }
-
+        
         let users = await User.find();
         let posts = [];
         users.forEach((user) => {
             posts = posts.concat(user.posts); // add the post to the posts array
         });
-
+        
         let post = posts.find((post) => post.title === req.body.post_title);
         if (!post) {
             return res.status(400).send({ message: "Post not found" });
         }
-
+        
         if (post.volunteers.includes(req.user.username)) {
             return res
-                .status(400)
-                .send({
-                    message: "User is already volunteering for this post",
-                });
+            .status(400)
+            .send({
+                message: "User is already volunteering for this post",
+            });
         }
-
+        
         let user = await User.findOne({ username: post.username });
         user.set({
             posts: user.posts.map((p) =>
                 p.title === req.body.post_title
-                    ? {
-                          ...p,
-                          volunteers: p.volunteers.concat(req.user.username),
-                      }
-                    : p,
-            ),
-        }); // add the user to the volunteers list in the post
-        user.set({
-            posts: user.posts.map((p) =>
-                p.title === req.body.post_title
-                    ? { ...p, numVolunteers: p.numVolunteers + 1 }
-                    : p,
-            ),
-        }); // add 1 to the number of volunteers in the post
-        await user.save();
+            ? {
+                ...p,
+                volunteers: p.volunteers.concat(req.user.username),
+            }
+            : p,
+        ),
+    }); // add the user to the volunteers list in the post
+    user.set({
+        posts: user.posts.map((p) =>
+            p.title === req.body.post_title
+        ? { ...p, numVolunteers: p.numVolunteers + 1 }
+        : p,
+    ),
+}); // add 1 to the number of volunteers in the post
+await user.save();
 
-        return res.status(200).send("Volunteered successfully");
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({ message: error.message });
-    }
+return res.status(200).send("Volunteered successfully");
+} catch (error) {
+    console.log(error);
+    res.status(500).send({ message: error.message });
+}
 });
 
 app.post("/create_post", async (req, res) => {
@@ -156,17 +156,17 @@ app.post("/create_post", async (req, res) => {
         ) {
             return res.status(400).send({
                 message:
-                    "Send all required fields: post, post.title, post.text, post.isVolunteer, post.isFundraiser",
+                "Send all required fields: post, post.title, post.text, post.isVolunteer, post.isFundraiser",
             });
         }
-
+        
         var newPost = req.body.post;
         newPost.username = req.user.username;
         newPost.volunteers = [];
         newPost.donors = [];
         newPost.numVolunteers = 0;
         newPost.numDonors = 0;
-
+        
         if (newPost.isVolunteer == "true") {
             // convert from string to boolean, something within js is broken and randomly decides to send "true" instead of true and "false" instead of false
             newPost.isVolunteer = true;
@@ -180,12 +180,12 @@ app.post("/create_post", async (req, res) => {
         if (newPost.isFundraiser == "false") {
             newPost.isFundraiser = false;
         }
-
+        
         const userId = req.user._id;
         let user = await User.findById(userId); // find the user based on their id
         user.set({ posts: user.posts.concat(newPost) }); // add the new post to the user's posts
         await user.save();
-
+        
         return res.status(201).send("Post created successfully");
     } catch (error) {
         console.log(error);
@@ -195,23 +195,23 @@ app.post("/create_post", async (req, res) => {
 
 app.post("/user_status", async (req, res) => {
     // get user status for a post (if volunteering and if donating)
-
+    
     try {
         if (!req.body.post_title) {
             return res.status(400).send({ message: "post_title is required" });
         }
-
+        
         let users = await User.find();
         let posts = [];
         users.forEach((user) => {
             posts = posts.concat(user.posts);
         });
-
+        
         let post = posts.find((post) => post.title === req.body.post_title);
         if (!post) {
             return res.status(400).send({ message: "Post not found" });
         }
-
+        
         let donating = false;
         let volunteering = false;
         if (post.donors.includes(req.user.username)) {
@@ -222,10 +222,10 @@ app.post("/user_status", async (req, res) => {
             // same logic as for donors
             volunteering = true;
         }
-
+        
         return res
-            .status(200)
-            .send({ donating: donating, volunteering: volunteering });
+        .status(200)
+        .send({ donating: donating, volunteering: volunteering });
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: error.message });
@@ -241,26 +241,206 @@ app.post("/create_social_post", async (req, res) => {
         ) {
             return res.status(400).send({
                 message:
-                    "Send all required fields: post, post.title, post.text",
+                "Send all required fields: post, post.title, post.text",
             });
         }
-
+        
         if (!req.body.post.image) {
             req.body.post.image =
-                "https://cdn.tennisbowling.com/hLSUfRvOqjopxuGT-LqxsXwYukIBpkgroQDJKpV4.jpg";
+            "https://cdn.tennisbowling.com/hLSUfRvOqjopxuGT-LqxsXwYukIBpkgroQDJKpV4.jpg";
         }
-
+        
         var newPost = req.body.post;
         newPost.username = req.user.username;
         newPost.likes = [];
         newPost.comments = [];
-
+        
         const userId = req.user._id;
         let user = await User.findById(userId);
         user.set({ socialPosts: user.socialPosts.concat(newPost) }); // add the new socialpost to the user's socialposts
         await user.save();
-
+        
         return res.status(201).send("Social Post created successfully");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+app.post("/create_comment", async (req, res) => {
+    try {
+        if (!req.body.comment.text || !req.body.original_post_title) {
+            return res.status(400).send({
+                message:
+                "Send all required fields: comment.text",
+            });
+        }
+        
+        
+        var comment = req.body.comment;
+        comment.username = req.user.username;
+        comment.likes = [];
+
+        let users = await User.find();
+        users.forEach((user) => {
+            user.posts.forEach((post) => {
+                if (post.title == req.body.original_post_title) {
+                    var newPost = post;
+                    newPost.comments.push(comment);
+                    user.set({
+                        posts: user.posts.filter((p) => p.title !== req.body.original_post_title).push(newPost),
+                    });
+
+                    return res.status(200).send("Comment added.");
+                }
+            });
+        });
+
+        return res.status(400).send({message: "Couldn't find original post"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+app.post("/like_comment", async (req, res) => {
+    try {
+        if (!req.body.original_post_title || !req.body.comment_text) {
+            return res.status(400).send({
+                message: "Send all required fields: original_post_title, comment_text",
+            });
+        }
+
+        const users = await User.find();
+        let commentLiked = false;
+
+        for (const user of users) {
+            const post = user.posts.find(p => p.title === req.body.original_post_title);
+            if (post) {
+                const comment = post.comments.find(c => c.text === req.body.comment_text);
+                if (comment) {
+                    if (!comment.likes.includes(req.user.username)) {
+                        comment.likes.push(req.user.username);
+                        await user.save();
+                        commentLiked = true;
+                    } else {
+                        return res.status(400).send({ message: "User has already liked this comment" });
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (commentLiked) {
+            return res.status(200).send({ message: "Comment liked successfully" });
+        } else {
+            return res.status(404).send({ message: "Comment not found" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+app.get("/user_liked_comment", async (req, res) => {
+    try {
+        if (!req.query.original_post_title || !req.query.comment_text) {
+            return res.status(400).send({
+                message: "Send all required fields: original_post_title, comment_text",
+            });
+        }
+
+        const users = await User.find();
+        
+        for (const user of users) {
+            const post = user.posts.find(p => p.title === req.query.original_post_title);
+            if (post) {
+                const comment = post.comments.find(c => c.text === req.query.comment_text);
+                if (comment) {
+                    const userLiked = comment.likes.includes(req.user.username);
+                    return res.status(200).send(userLiked);
+                }
+            }
+        }
+
+        return res.status(404).send({ message: "Comment not found" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+app.delete("/delete_comment", async (req, res) => {
+    try {
+        if (!req.body.original_post_title || !req.body.comment_text) {
+            return res.status(400).send({
+                message: "Send all required fields: original_post_title, comment_text",
+            });
+        }
+
+        const users = await User.find();
+        let commentDeleted = false;
+
+        for (const user of users) {
+            const postIndex = user.posts.findIndex(p => p.title === req.body.original_post_title);
+            if (postIndex !== -1) {
+                const commentIndex = user.posts[postIndex].comments.findIndex(c => c.text === req.body.comment_text);
+                if (commentIndex !== -1) {
+                    // Check if the current user is the comment author or the post author
+                    if (user.posts[postIndex].comments[commentIndex].username === req.user.username || 
+                        user.posts[postIndex].username === req.user.username) {
+                        
+                        user.posts[postIndex].comments.splice(commentIndex, 1);
+                        await user.save();
+                        commentDeleted = true;
+                        break;
+                    } else {
+                        return res.status(403).send({ message: "You don't have permission to delete this comment" });
+                    }
+                }
+            }
+        }
+
+        if (commentDeleted) {
+            return res.status(200).send({ message: "Comment deleted successfully" });
+        } else {
+            return res.status(404).send({ message: "Comment not found" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: error.message });
+    }
+});
+
+app.get("/get_post_comments", async (req, res) => {
+    try {
+        if (!req.query.post_title) {
+            return res.status(400).send({
+                message: "Send the required field: post_title",
+            });
+        }
+
+        const users = await User.find();
+        
+        for (const user of users) {
+            const post = user.posts.find(p => p.title === req.query.post_title);
+            if (post) {
+                // Sort comments by date (assuming there's a createdAt field)
+                const sortedComments = post.comments.sort((a, b) => b.createdAt - a.createdAt);
+                
+                return res.status(200).json({
+                    post_title: post.title,
+                    comments: sortedComments.map(comment => ({
+                        text: comment.text,
+                        username: comment.username,
+                        likes: comment.likes.length,
+                        createdAt: comment.createdAt
+                    }))
+                });
+            }
+        }
+
+        return res.status(404).send({ message: "Post not found" });
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: error.message });
@@ -341,13 +521,13 @@ function checkNotAuthenticated(req, res, next) {
 }
 
 mongoose // connect to the MongoDB database
-    .connect(MONGO_URL)
-    .then(() => {
-        console.log("Connected to MongoDB");
-        app.listen(PORT, () => {
-            console.log(`Server is listening on port ${PORT}`);
-        });
-    })
-    .catch((error) => {
-        console.log(error);
+.connect(MONGO_URL)
+.then(() => {
+    console.log("Connected to MongoDB");
+    app.listen(PORT, () => {
+        console.log(`Server is listening on port ${PORT}`);
     });
+})
+.catch((error) => {
+    console.log(error);
+});

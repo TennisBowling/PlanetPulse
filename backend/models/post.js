@@ -61,7 +61,6 @@ const commentSchema = new mongoose.Schema(
         likes: {
             type: [String],
             required: true,
-            default: 0,
         },
     },
     {
