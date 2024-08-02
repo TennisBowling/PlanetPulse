@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSnackbar } from "notistack";
 
-const SocialPost = ({ title, body, imgSrc, username, _likes, onDelete }) => {
+const SocialPost = ({ title, body, imgSrc, username, likes: initialLikes, onDelete }) => {
   const [liked, setLiked] = useState(false);
-  const [likes, setLikes] = useState(0);
+  const [likes, setLikes] = useState(initialLikes);
   const { enqueueSnackbar } = useSnackbar();
-
-  setLikes(_likes);
 
   useEffect(() => {
     checkLikeStatus();
@@ -27,12 +25,12 @@ const SocialPost = ({ title, body, imgSrc, username, _likes, onDelete }) => {
 
   const handleLike = async () => {
     try {
-      await axios.post("https://planetpulse.tennisbowling.com/api/like_social_post", 
+      const response = await axios.post("https://planetpulse.tennisbowling.com/api/like_social_post", 
         { post_title: title }, 
         { withCredentials: true }
       );
       setLiked(true);
-      setLikes(likes + 1);
+      setLikes(prevLikes => prevLikes + 1);
       enqueueSnackbar("Post liked successfully", { variant: "success" });
     } catch (error) {
       if (error.response?.data?.message === "User already likes this post") {
@@ -53,7 +51,7 @@ const SocialPost = ({ title, body, imgSrc, username, _likes, onDelete }) => {
         <div className="mt-4 flex justify-between items-center">
           <button 
             onClick={handleLike} 
-            className={`px-4 py-2 rounded ${liked ? 'bg-blue-600' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+            className={`px-4 py-2 rounded ${liked ? 'bg-red-600' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
           >
             {liked ? 'Liked' : 'Like'} ({likes})
           </button>
