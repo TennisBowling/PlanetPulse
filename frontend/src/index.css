@@ -1,0 +1,38 @@
+/* Tailwind components */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Dark Mode */
+html,
+body {
+    min-height: 100vh;
+    background-color: #1f2937;
+    color: white;
+}
+
+/* scrollbar stuff */
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #283c50;
+    /* display: none */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: gray;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    border-radius: 5px;
+}
