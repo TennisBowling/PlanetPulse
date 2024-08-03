@@ -432,7 +432,7 @@ app.delete("/delete_comment", async (req, res) => {
                 comment.username = req.user.username;
                 comment.likes = [];
                 
-                var postCopy = post;
+                var postCopy = user.socialPosts[post];
                 postCopy.comments.push(comment);
                 
                 var new_user_social_posts = user.socialPosts.filter((p) => p.title !== req.body.original_post_title);
