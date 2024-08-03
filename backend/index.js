@@ -424,12 +424,13 @@ app.delete("/delete_comment", async (req, res) => {
         
         for (const post in user.socialPosts) {
             if (user.socialPosts[post].title == req.body.original_post_title) {
-                
+
                 var postCopy = user.socialPosts[post];
                 postCopy.comments = postCopy.comments.filter((c) => c.text != req.body.comment_text);
                 
                 var new_user_social_posts = user.socialPosts.filter((p) => p.title !== req.body.original_post_title);
                 new_user_social_posts.push(postCopy);
+                console.log("old posts", user.socialPosts);
                 console.log("users new posts", new_user_social_posts);
                 
                 user.set({
