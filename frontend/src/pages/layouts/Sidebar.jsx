@@ -26,6 +26,15 @@ const Sidebar = () => {
                         />
                     </a>
                     <a
+                        href="/createsocialpost"
+                        className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-black"
+                    >
+                        <img
+                            src="https://www.svgrepo.com/show/411499/create.svg"
+                            className="w-6 h-6"
+                        />
+                    </a>
+                    <a
                         href="/search"
                         className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-black"
                     >
