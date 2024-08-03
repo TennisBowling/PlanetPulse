@@ -36,7 +36,7 @@ const Comment = ({
         try {
             const response = await axios.post(
                 "https://planetpulse.tennisbowling.com/api/like_comment",
-                { original_post_title: originalPostTitle, comment_text: text },
+                { original_post_title: originalPostTitle, comment_text: text, original_post_username: username },
                 { withCredentials: true }
             );
             setLiked(true);
