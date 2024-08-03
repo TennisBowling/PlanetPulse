@@ -414,40 +414,36 @@ app.get("/user_liked_comment", async (req, res) => {
 
 app.delete("/delete_comment", async (req, res) => {
     try {
-        if (!req.body.original_post_title || !req.body.comment_text) {
+        if (!req.body.original_post_title || !req.body.comment_text, !req.body.original_post_username) {
             return res.status(400).send({
-                message: "Send all required fields: original_post_title, comment_text",
+                message: "Send all required fields: original_post_title, comment_text, original_post_username",
             });
         }
 
-        const users = await User.find();
-        let commentDeleted = false;
+        const user = await User.findOne({ username: req.body.original_post_username });
 
-        for (const user of users) {
-            const postIndex = user.socialPosts.findIndex(p => p.title === req.body.original_post_title);
-            if (postIndex !== -1) {
-                const commentIndex = user.socialPosts[postIndex].comments.findIndex(c => c.text === req.body.comment_text);
-                if (commentIndex !== -1) {
-                    // Check if the current user is the comment author or the post author
-                    if (user.socialPosts[postIndex].comments[commentIndex].username === req.user.username || 
-                        user.socialPosts[postIndex].username === req.user.username) {
-                        
-                        user.socialPosts[postIndex].comments.splice(commentIndex, 1);
-                        await user.save();
-                        commentDeleted = true;
-                        break;
-                    } else {
-                        return res.status(403).send({ message: "You don't have permission to delete this comment" });
-                    }
-                }
-            }
-        }
+      for (const post in user.socialPosts) {
+        if (post.title == req.body.original_post_title) {
+            var comment = req.body.comment;
+            comment.username = req.user.username;
+            comment.likes = [];
 
-        if (commentDeleted) {
-            return res.status(200).send({ message: "Comment deleted successfully" });
-        } else {
-            return res.status(404).send({ message: "Comment not found" });
+            var postCopy = post;
+            postCopy.comments.push(comment);
+
+            var new_user_social_posts = user.socialPosts.filter((p) => p.title !== req.body.original_post_title);
+            new_user_social_posts.push(postCopy);
+
+            user.set({
+                socialPosts: new_user_social_posts,
+            });
+            await user.save();
+
+            return res.status(200).send({message: "Comment deleted."});
         }
+      }
+
+      return res.status(400).send({message: "Comment not deleted."});
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: error.message });

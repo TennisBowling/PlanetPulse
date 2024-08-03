@@ -56,7 +56,7 @@ const Comment = ({
             await axios.delete(
                 "https://planetpulse.tennisbowling.com/api/delete_comment",
                 {
-                    data: { original_post_title: originalPostTitle, comment_text: text },
+                    data: { original_post_title: originalPostTitle, comment_text: text, original_post_username: username },
                     withCredentials: true,
                 }
             );
