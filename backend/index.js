@@ -428,8 +428,9 @@ app.delete("/delete_comment", async (req, res) => {
             console.log("checking post", post, post.title);
             if (user.socialPosts[post].title == req.body.original_post_title) {
                 console.log("post title matched");
-                var comment = req.body.comment;
+                var comment = {};
                 comment.username = req.user.username;
+                comment.text = req.body.comment_text;
                 comment.likes = [];
                 
                 var postCopy = user.socialPosts[post];
