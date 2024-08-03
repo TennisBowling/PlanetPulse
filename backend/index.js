@@ -342,46 +342,51 @@ app.post("/create_comment", async (req, res) => {
 
 app.post("/like_comment", async (req, res) => {
     try {
-        if (!req.body.original_post_title || !req.body.comment_text) {
+        if (!req.body.original_post_title || !req.body.comment_text || !req.body.original_post_username) {
             return res.status(400).send({
-                message: "Send all required fields: original_post_title, comment_text",
+                message: "Send all required fields: original_post_title, comment_text, original_post_username",
             });
         }
-        
-        const users = await User.find();
-        let commentLiked = false;
-        
-        for (const user of users) {
-            const post = user.socialPosts.find(p => p.title === req.body.original_post_title);
-            if (post) {
-                const comment = post.comments.find(c => c.text === req.body.comment_text);
-                if (comment) {
-                    if (!comment.likes.includes(req.user.username)) {
-                        comment.likes.push(req.user.username);
-                        
-                        // Save the comment with the updated likes array
-                        await comment.save();
-                        
-                        commentLiked = true;
-                    } else {
-                        return res.status(400).send({ message: "User has already liked this comment" });
-                    }
-                    break;
-                }
-            }
+
+        if (!req.user || !req.user.username) {
+            return res.status(401).send({ message: "User not authenticated." });
         }
-        
-        if (commentLiked) {
-            return res.status(200).send({ message: "Comment liked successfully" });
-        } else {
-            return res.status(404).send({ message: "Comment not found" });
+
+        const user = await User.findOne({ username: req.body.original_post_username });
+
+        if (!user) {
+            return res.status(404).send({ message: "User not found." });
         }
+
+        const postIndex = user.socialPosts.findIndex(post => post.title === req.body.original_post_title);
+
+        if (postIndex === -1) {
+            return res.status(404).send({ message: "Post not found." });
+        }
+
+        const commentIndex = user.socialPosts[postIndex].comments.findIndex(comment => comment.text === req.body.comment_text);
+
+        if (commentIndex === -1) {
+            return res.status(404).send({ message: "Comment not found." });
+        }
+
+        // check if the user has already liked the comment
+        if (user.socialPosts[postIndex].comments[commentIndex].likes.includes(req.user.username)) {
+            return res.status(400).send({ message: "User has already liked this comment." });
+        }
+
+        user.socialPosts[postIndex].comments[commentIndex].likes.push(req.user.username);
+
+        user.markModified('socialPosts');
+
+        await user.save();
+
+        return res.status(200).send({ message: "Comment liked successfully." });
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: error.message });
     }
 });
-
 
 
 app.get("/user_liked_comment", async (req, res) => {
@@ -414,7 +419,7 @@ app.get("/user_liked_comment", async (req, res) => {
 
 app.delete("/delete_comment", async (req, res) => {
     try {
-        if (!req.body.original_post_title || !req.body.comment_text, !req.body.original_post_username) {
+        if (!req.body.original_post_title || !req.body.comment_text || !req.body.original_post_username) {
             return res.status(400).send({
                 message: "Send all required fields: original_post_title, comment_text, original_post_username",
             });
@@ -422,27 +427,31 @@ app.delete("/delete_comment", async (req, res) => {
         
         const user = await User.findOne({ username: req.body.original_post_username });
         
-        for (const post in user.socialPosts) {
-            if (user.socialPosts[post].title == req.body.original_post_title) {
-
-                var postCopy = user.socialPosts[post];
-                postCopy.comments = postCopy.comments.filter((c) => c.text != req.body.comment_text);
-                
-                var new_user_social_posts = user.socialPosts.filter((p) => p.title !== req.body.original_post_title);
-                new_user_social_posts.push(postCopy);
-                console.log("old posts", user.socialPosts);
-                console.log("users new posts", new_user_social_posts);
-                
-                user.set({
-                    socialPosts: new_user_social_posts,
-                });
-                await user.save();
-                
-                return res.status(200).send({message: "Comment deleted."});
-            }
+        if (!user) {
+            return res.status(404).send({ message: "User not found." });
         }
-        
-        return res.status(400).send({message: "Comment not deleted."});
+
+        const postIndex = user.socialPosts.findIndex(post => post.title === req.body.original_post_title);
+
+        if (postIndex === -1) {
+            return res.status(404).send({ message: "Post not found." });
+        }
+
+        const commentIndex = user.socialPosts[postIndex].comments.findIndex(comment => comment.text === req.body.comment_text);
+
+        if (commentIndex === -1) {
+            return res.status(404).send({ message: "Comment not found." });
+        }
+
+        // remove comment
+        user.socialPosts[postIndex].comments.splice(commentIndex, 1);
+
+        // mark the socialPosts array as modified to make mongoose update it
+        user.markModified('socialPosts');
+
+        await user.save();
+
+        return res.status(200).send({ message: "Comment deleted." });
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: error.message });
