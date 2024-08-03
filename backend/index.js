@@ -421,20 +421,12 @@ app.delete("/delete_comment", async (req, res) => {
         }
         
         const user = await User.findOne({ username: req.body.original_post_username });
-        console.log("user fond", user);
         
-        console.log("post title", req.body.original_post_title, "comment text", req.body.comment_text, "poster", req.body.original_post_username);
         for (const post in user.socialPosts) {
-            console.log("checking post", post, post.title);
             if (user.socialPosts[post].title == req.body.original_post_title) {
-                console.log("post title matched");
-                var comment = {};
-                comment.username = req.user.username;
-                comment.text = req.body.comment_text;
-                comment.likes = [];
                 
                 var postCopy = user.socialPosts[post];
-                postCopy.comments.push(comment);
+                postCopy.comments = postCopy.comments.filter((c) => c.text != req.body.comment_text);
                 
                 var new_user_social_posts = user.socialPosts.filter((p) => p.title !== req.body.original_post_title);
                 new_user_social_posts.push(postCopy);
