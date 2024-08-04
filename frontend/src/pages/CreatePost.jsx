@@ -143,7 +143,7 @@ const CreatePost = () => {
                                 type="file"
                                 accept="image/*"
                                 onChange={handleImageChange}
-                                className="block w-full text-sm text-white file:rounded-xl file:bg-gradient-to-r from-violet-500 to-orange-500 file:border-none file:h-8 file:text-white "
+                                className="block w-full text-sm text-white file:rounded-xl file:bg-gradient-to-r from-violet-500 to-orange-500 file:border-none file:h-8 file:text-white ml-7 "
                             />
                             {imageUrl && (
                                 <div>
@@ -174,7 +174,7 @@ const CreatePost = () => {
                                 onChange={(e) =>
                                     setisVolunteer(e.target.checked)
                                 }
-                                className="border-2 border-gray-500 px-4 py-2"
+                                className="border-2 border-gray-500 px-4 py-2 border"
                             />
                         </div>
                         <div className="my-4">

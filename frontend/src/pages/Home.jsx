@@ -71,13 +71,13 @@ const Home = () => {
                     <div className="border-0 flex-grow p-4">
                         <div className="flex justify-center mb-4">
                             <button
-                                className={`mx-2 px-4 py-2 rounded ${activeTab === "posts" ? "bg-blue-500" : "bg-gray-500"}`}
+                                className={`mx-2 px-4 py-2 rounded ${activeTab === "posts" ? "bg-blue-500" : "bg-gray-500"} hover:bg-blue-400`}
                                 onClick={() => setActiveTab("posts")}
                             >
                                 Posts
                             </button>
                             <button
-                                className={`mx-2 px-4 py-2 rounded ${activeTab === "socialPosts" ? "bg-blue-500" : "bg-gray-500"}`}
+                                className={`mx-2 px-4 py-2 rounded ${activeTab === "socialPosts" ? "bg-blue-500" : "bg-gray-500"} hover:bg-blue-400`}
                                 onClick={() => setActiveTab("socialPosts")}
                             >
                                 Social Posts

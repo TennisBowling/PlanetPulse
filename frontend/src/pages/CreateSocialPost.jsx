@@ -122,26 +122,24 @@ const CreateSocialPost = () => {
                         <h1 className="text-3xl my-4 text-white font-bold align-middle">
                             Create Social Post
                         </h1>
-                        <div className="my-4">
-                            <label className="text-xl mr-4 text-gray-300 w-1/3">
-                                Title:
-                            </label>
+                        <div className="my-4 flex items-start">
+                            <label className="text-xl mr-4 text-gray-300" style={{ width: '12%' }}>Title:</label>
                             <input
                                 type="text"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
-                                className="px-4 py-2 w-5/6 bg-gray-800 text-white rounded-xl"
+                                className="px-4 py-2 bg-gray-800 text-white rounded-xl flex-1"
+                                style={{ width: 'calc(100% - 12% - 1rem)' }}
                             />
                         </div>
-                        <div className="my-4 align-middle">
-                            <label className="text-xl mr-4 text-gray-300 w-1/6">
-                                Text:
-                            </label>
+                        <div className="my-4 flex items-start">
+                            <label className="text-xl mr-4 text-gray-300" style={{ width: '12%' }}>Text:</label>
                             <textarea
                                 value={text}
                                 onChange={(e) => setText(e.target.value)}
-                                className="px-4 py-2 w-5/6 bg-gray-800 text-white rounded-xl"
+                                className="px-4 py-2 bg-gray-800 text-white rounded-xl flex-1"
                                 rows="4"
+                                style={{ width: 'calc(100% - 12% - 1rem)' }} 
                             />
                         </div>
                         <form
@@ -152,13 +150,13 @@ const CreateSocialPost = () => {
                                 type="file"
                                 accept="image/*"
                                 onChange={handleImageChange}
-                                className="block w-full text-sm text-white file:rounded-xl file:bg-gradient-to-r from-violet-500 to-orange-500 file:border-none file:h-8 file:text-white"
+                                className="block w-full text-sm text-white file:rounded-xl file:bg-gradient-to-r from-violet-500 to-orange-500 file:border-none file:h-8 file:text-white ml-7"
                             />
                             {imageUrl && (
                                 <div>
                                     <button
                                         type="submit"
-                                        className="mt-2 text-white block w-full py-2 px-4 mb-2 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 focus:outline-none focus:ring focus:border-blue-300"
+                                        className="mt- text-white block w-full py-2 px-4 mb-2 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 focus:outline-none focus:ring focus:border-blue-300"
                                     >
                                         Submit
                                     </button>

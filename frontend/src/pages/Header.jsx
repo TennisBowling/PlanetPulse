@@ -100,10 +100,10 @@ const Header = (props) => {
                             <img
                                 src={"/images/logo.png"}
                                 alt="Logo"
-                                className="h-[50px] w-[50px] mr-5 mt-2"
+                                className="h-[50px] w-[65px] mr-5 mt-1"
                             />
                             <h1 className="text-2xl font-bold text-white font-poppin hidden md:block">
-                                PlanetPulse
+                                Planet Pulse
                             </h1>
                         </div>
                     </a>
