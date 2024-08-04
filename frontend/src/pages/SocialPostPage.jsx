@@ -14,6 +14,7 @@ const SocialPostPage = () => {
     const [loading, setLoading] = useState(true);
     const [liked, setLiked] = useState(false);
     const [newComment, setNewComment] = useState("");
+    const [currentUsername, setCurrentUsername] = useState("");
 
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
@@ -55,6 +56,19 @@ const SocialPostPage = () => {
                 console.log(error);
             });
     }, [id]);
+
+    useEffect(() => {
+        axios.get("https://routescout.tennisbowling.com/api/get_user", {
+            withCredentials: true,
+        })
+        .then((response) => {
+            setCurrentUsername(response.data.user.username);
+        })
+        .catch((error) => {
+            console.log("Error fetching current user:", error);
+            enqueueSnackbar("Error fetching user information", { variant: "error" });
+        });
+    }, [enqueueSnackbar]);
 
     // Check if the user has liked this post
     useEffect(() => {
@@ -100,14 +114,14 @@ const SocialPostPage = () => {
             )
             .then(() => {
                 setLiked(true);
-                setPost((prev) => ({
-                    ...prev,
-                    likes: [...prev.likes, "currentUser"],
-                }));
-                enqueueSnackbar("Post liked", {
-                    variant: "success",
-                    autoHideDuration: 1000,
-                });
+            setPost((prev) => ({
+                ...prev,
+                likes: [...prev.likes, currentUsername],
+            }));
+            enqueueSnackbar("Post liked", {
+                variant: "success",
+                autoHideDuration: 1000,
+            });
             })
             .catch((error) => {
                 if (
@@ -146,7 +160,7 @@ const SocialPostPage = () => {
                 enqueueSnackbar("Comment added", { variant: "success", autoHideDuration: 1000 });
                 setComments((prevComments) => [
                     ...prevComments,
-                    { text: newComment, username: "currentUser", likes: [] },
+                    { text: newComment, username: currentUsername, likes: [] },
                 ]);
                 setNewComment("");
             }
