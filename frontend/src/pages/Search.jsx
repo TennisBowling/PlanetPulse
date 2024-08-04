@@ -94,33 +94,33 @@ const Search = () => {
     return (
         <>
             <Header name={window.location.pathname} />
-            <Sidebar />
-            <div className="p-4">
-                <h1 className="text-3xl my-4 text-center">Search</h1>
-                <div className="flex flex-col border-2 border-sky-400 rounded-xl w-[600px] max-w-[75%] p-4 mx-auto">
-                    <div className="my-4">
-                        <label className="text-xl mr-4">Search Query</label>
-                        <input
-                            type="text"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="border-2 border-gray-500 px-4 py-2 w-full rounded-xl text-black"
-                        />
+            <div className="flex bg-gray-800">
+                <Sidebar />
+                <div className="border-0 flex-grow p-4">
+                    <h1 className="text-3xl my-4 text-center text-white">Search</h1>
+                    <div className="flex flex-col border-2 border-sky-400 rounded-xl w-[600px] max-w-[75%] p-4 mx-auto mb-8">
+                        <div className="my-4">
+                            <label className="text-xl mr-4 text-white">Search Query</label>
+                            <input
+                                type="text"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="border-2 border-gray-500 px-4 py-2 w-full rounded-xl text-black"
+                            />
+                        </div>
+                        <button
+                            className="p-2 bg-sky-400 m-8 rounded-xl border-solid border-2 border-sky-400 hover:border-sky-600"
+                            onClick={() => setSubmittedSearch(search)}
+                        >
+                            Search
+                        </button>
                     </div>
-                    <button
-                        className="p-2 bg-sky-400 m-8 rounded-xl border-solid border-2 border-sky-400 hover:border-sky-600"
-                        onClick={() => setSubmittedSearch(search)}
-                    >
-                        Search
-                    </button>
-                </div>
-                {submittedSearch !== "" && (
-                    <div className="border-0 flex-grow p-4">
+                    {submittedSearch !== "" && (
                         <div className="grid gap-4 2xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 px-[10%] py-16 text-white">
                             {posts.map((post, index) => renderPost(post, index))}
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </>
     );
