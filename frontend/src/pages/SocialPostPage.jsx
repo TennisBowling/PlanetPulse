@@ -58,7 +58,7 @@ const SocialPostPage = () => {
     }, [id]);
 
     useEffect(() => {
-        axios.get("https://routescout.tennisbowling.com/api/get_user", {
+        axios.get("https://planetpulse.tennisbowling.com/api/get_user", {
             withCredentials: true,
         })
         .then((response) => {
