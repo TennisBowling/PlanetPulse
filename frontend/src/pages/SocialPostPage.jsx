@@ -211,6 +211,7 @@ const SocialPostPage = () => {
                             key={index}
                             text={comment.text}
                             username={comment.username}
+                            original_post_username={post.username}
                             likes={comment.likes}
                             originalPostTitle={post.title}
                             onDelete={() => handleCommentDelete(comment.text)}

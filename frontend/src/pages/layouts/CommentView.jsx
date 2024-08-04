@@ -5,6 +5,7 @@ import { useSnackbar } from "notistack";
 const Comment = ({
     text,
     username,
+    original_post_username,
     likes: initialLikes,
     originalPostTitle,
     onDelete,
@@ -36,7 +37,7 @@ const Comment = ({
         try {
             const response = await axios.post(
                 "https://planetpulse.tennisbowling.com/api/like_comment",
-                { original_post_title: originalPostTitle, comment_text: text, original_post_username: username },
+                { original_post_title: originalPostTitle, comment_text: text, original_post_username: original_post_username },
                 { withCredentials: true }
             );
             setLiked(true);
@@ -56,7 +57,7 @@ const Comment = ({
             await axios.delete(
                 "https://planetpulse.tennisbowling.com/api/delete_comment",
                 {
-                    data: { original_post_title: originalPostTitle, comment_text: text, original_post_username: username },
+                    data: { original_post_title: originalPostTitle, comment_text: text, original_post_username: original_post_username },
                     withCredentials: true,
                 }
             );
