@@ -134,6 +134,7 @@ router.post("/search_posts", async (req, res) => {
         let posts = [];
         users.forEach((user) => {
             posts = posts.concat(user.posts);
+            posts = posts.concat(user.socialPosts);
         });
 
         const options = {
