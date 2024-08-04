@@ -156,7 +156,7 @@ const CreateSocialPost = () => {
                                 <div>
                                     <button
                                         type="submit"
-                                        className="mt- text-white block w-full py-2 px-4 mb-2 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 focus:outline-none focus:ring focus:border-blue-300"
+                                        className="mt-4 text-white block w-full py-2 px-4 mb-2 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 focus:outline-none focus:ring focus:border-blue-300"
                                     >
                                         Submit
                                     </button>
